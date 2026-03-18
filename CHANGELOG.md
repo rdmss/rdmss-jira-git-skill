@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-03-18
+
+### Added
+- **Renamed to `devops-pilot`** — new identity: `/devops-pilot` commands
+- Authentication verification as mandatory first step in setup wizard
+- `gh auth status` check for GitHub CLI authentication
+- Jira MCP authentication verification before project selection
+- Auth status summary showing all integrations (Jira, GitHub, Git)
+- Clear guidance when auth is missing ("Run `gh auth login`")
+- Git remote URL and GitHub repo stored in config
+- GitHub username stored in config for PR attribution
+
+### Changed
+- Setup wizard now starts with auth check (Step 0) before any project selection
+- Config validation re-checks auth on every invocation
+- All commands renamed from `/rdmss-jira-git` to `/devops-pilot`
+- Safety rules expanded to 17 (auth check rule added)
+
 ## [2.0.0] - 2026-03-18
 
 ### Added
@@ -18,13 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `root_cause` field in issue frontmatter for triaged bugs
 - Structured Jira comment templates for different scenarios
 - User confirmation before creating issues: always shows structured preview first
-- Commands now organized in three categories: Create & Triage, Execute, Manage
+- Commands organized in three categories: Create & Triage, Execute, Manage
 
 ### Changed
-- Skill identity: from "workflow executor" to "complete dev workflow engine" (creates + executes + manages)
-- Setup wizard now also discovers issue type IDs via `getJiraIssueTypeMetaWithFields`
-- Description field in SKILL.md expanded with creation/triage trigger keywords
-- Safety rules expanded from 14 to 16 (duplicate safety + user confirmation)
+- Skill identity: from "workflow executor" to "complete dev workflow copilot"
+- Setup wizard discovers issue type IDs
+- Safety rules expanded to 16
 
 ## [1.1.0] - 2026-03-18
 

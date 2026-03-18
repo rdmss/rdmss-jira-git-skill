@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
 </p>
 
-<h1 align="center">rdmss-jira-git</h1>
+<h1 align="center">devops-pilot</h1>
 
 <p align="center">
   <strong>Dev Workflow Skill for Claude Code</strong><br/>
@@ -36,7 +36,7 @@ Every context switch kills productivity. A developer working on a bug goes throu
 ## The Solution
 
 ```
-/rdmss-jira-git work ERP-42
+/devops-pilot work ERP-42
 ```
 
 One command. Zero context switches. The skill handles everything:
@@ -54,13 +54,13 @@ One command. Zero context switches. The skill handles everything:
 
 | | Before (manual) | After (with skill) |
 |:--|:----------------|:-------------------|
-| **Start work** | Open Jira, find issue, copy key, create branch manually | `/rdmss-jira-git work ERP-42` |
-| **Track progress** | Switch between Jira board and IDE constantly | `/rdmss-jira-git status` |
-| **Close issue** | Write commit, push, open Jira, write comment, move card | `/rdmss-jira-git done ERP-42` |
-| **Create PR** | Open GitHub, write title, copy description, link Jira | `/rdmss-jira-git pr ERP-42` |
-| **Close epics** | Check each child manually, update epic status | `/rdmss-jira-git close-epics` |
-| **Batch close** | Open each issue, comment, close, repeat N times | `/rdmss-jira-git batch-done ERP-10 ERP-11 ERP-12` |
-| **Plan sprint** | Read backlog, prioritize mentally, write plan somewhere | `/rdmss-jira-git plan` |
+| **Start work** | Open Jira, find issue, copy key, create branch manually | `/devops-pilot work ERP-42` |
+| **Track progress** | Switch between Jira board and IDE constantly | `/devops-pilot status` |
+| **Close issue** | Write commit, push, open Jira, write comment, move card | `/devops-pilot done ERP-42` |
+| **Create PR** | Open GitHub, write title, copy description, link Jira | `/devops-pilot pr ERP-42` |
+| **Close epics** | Check each child manually, update epic status | `/devops-pilot close-epics` |
+| **Batch close** | Open each issue, comment, close, repeat N times | `/devops-pilot batch-done ERP-10 ERP-11 ERP-12` |
+| **Plan sprint** | Read backlog, prioritize mentally, write plan somewhere | `/devops-pilot plan` |
 | **Context switches** | 7 per issue | 0 |
 
 ---
@@ -109,38 +109,57 @@ One command. Zero context switches. The skill handles everything:
 ```bash
 # Global (all projects)
 mkdir -p ~/.claude/skills
-cp SKILL.md ~/.claude/skills/rdmss-jira-git.md
+cp SKILL.md ~/.claude/skills/devops-pilot.md
 
 # Or per-project
-cp SKILL.md your-project/.claude/skills/rdmss-jira-git.md
+cp SKILL.md your-project/.claude/skills/devops-pilot.md
 ```
 
 ### 2. Run
 
 ```
-/rdmss-jira-git
+/devops-pilot
 ```
 
-The setup wizard auto-discovers everything:
+The setup wizard verifies authentication and auto-discovers everything:
 
 ```
- Detecting integrations...
+ Checking authentication...
 
- ✓ Jira: acme.atlassian.net (2 projects found)
-   1. ERP — Acme ERP
-   2. WEB — Acme Website
+ ✓ Jira: authenticated (acme.atlassian.net)
+ ✓ GitHub: authenticated (ana-silva)
+ ✓ Git: repository detected (origin → github.com/acme/erp-system)
 
- Which project? > 1
+ Available projects on acme.atlassian.net:
+   1. ERP — Acme ERP System
+   2. WEB — Company Website
+   3. MOB — Mobile App
 
- ✓ User: Ana Silva (ana@acme.dev)
+ Which project will you work on? > 1
+
+ ✓ Working as: Ana Silva (ana@acme.dev)
  ✓ Transitions: Backlog(11) → In Progress(31) → Done(41)
- ✓ Git: main branch, origin remote, GitHub detected
+ ✓ Issue types: Bug, Story, Task, Epic
+ ✓ GitHub repo: acme/erp-system
  ✓ Config saved to .claude/tracker/config.json
 
  Syncing issues...
  ✓ 23 issues synced (8 bugs, 15 features)
 
- Ready! Run /rdmss-jira-git status to see your dashboard.
+ Ready! Run /devops-pilot status to see your dashboard.
+```
+
+If something is missing, the wizard tells you exactly what to do:
+
+```
+ Checking authentication...
+
+ ✓ Jira: authenticated (acme.atlassian.net)
+ ✗ GitHub: not authenticated
+   → Run: gh auth login
+ ✓ Git: repository detected
+
+ Continuing without GitHub PR features...
 ```
 
 **No manual IDs. No YAML editing. No documentation hunting.**
@@ -155,43 +174,43 @@ The setup wizard auto-discovers everything:
 
 | Command | What it does |
 |:--------|:-------------|
-| `/rdmss-jira-git triage {text}` | Analyze error/bug report, find root cause in code, create Jira issue |
-| `/rdmss-jira-git create-issue {text}` | Create bug/feature/task from natural language |
-| `/rdmss-jira-git create-epic {title}` | Create epic + break down into child stories |
-| `/rdmss-jira-git create-from-notes {text}` | Extract multiple issues from meeting notes or emails |
+| `/devops-pilot triage {text}` | Analyze error/bug report, find root cause in code, create Jira issue |
+| `/devops-pilot create-issue {text}` | Create bug/feature/task from natural language |
+| `/devops-pilot create-epic {title}` | Create epic + break down into child stories |
+| `/devops-pilot create-from-notes {text}` | Extract multiple issues from meeting notes or emails |
 
 **Execute** (work on issues end-to-end)
 
 | Command | What it does |
 |:--------|:-------------|
-| `/rdmss-jira-git work {KEY}` | Assign + branch + analyze codebase + implement |
-| `/rdmss-jira-git done {KEY}` | Commit + push + Jira comment + close issue |
-| `/rdmss-jira-git pr {KEY}` | Create GitHub PR with Jira link |
-| `/rdmss-jira-git verify {KEY}` | Run build/tests before marking done |
-| `/rdmss-jira-git comment {KEY}` | Add a Jira comment without closing |
-| `/rdmss-jira-git reopen {KEY}` | Reopen a closed issue |
-| `/rdmss-jira-git batch-done {K1 K2 ...}` | Close multiple already-implemented issues |
+| `/devops-pilot work {KEY}` | Assign + branch + analyze codebase + implement |
+| `/devops-pilot done {KEY}` | Commit + push + Jira comment + close issue |
+| `/devops-pilot pr {KEY}` | Create GitHub PR with Jira link |
+| `/devops-pilot verify {KEY}` | Run build/tests before marking done |
+| `/devops-pilot comment {KEY}` | Add a Jira comment without closing |
+| `/devops-pilot reopen {KEY}` | Reopen a closed issue |
+| `/devops-pilot batch-done {K1 K2 ...}` | Close multiple already-implemented issues |
 
 **Manage** (track and organize)
 
 | Command | What it does |
 |:--------|:-------------|
-| `/rdmss-jira-git` | Setup wizard (first time) or status dashboard |
-| `/rdmss-jira-git sync` | Pull issues from Jira to local markdown files |
-| `/rdmss-jira-git status` | Dashboard with progress by epic and priority |
-| `/rdmss-jira-git plan` | Execution plan by phases (bugs first, features later) |
-| `/rdmss-jira-git close-epics` | Auto-close epics with 100% children done |
-| `/rdmss-jira-git branch {name}` | Create branch (Git-only) |
-| `/rdmss-jira-git commit` | Smart commit with conventional messages |
+| `/devops-pilot` | Setup wizard (first time) or status dashboard |
+| `/devops-pilot sync` | Pull issues from Jira to local markdown files |
+| `/devops-pilot status` | Dashboard with progress by epic and priority |
+| `/devops-pilot plan` | Execution plan by phases (bugs first, features later) |
+| `/devops-pilot close-epics` | Auto-close epics with 100% children done |
+| `/devops-pilot branch {name}` | Create branch (Git-only) |
+| `/devops-pilot commit` | Smart commit with conventional messages |
 
 ---
 
-### `/rdmss-jira-git triage`
+### `/devops-pilot triage`
 
 The power command. Give it any bug report — error log, user complaint, stack trace — and it finds the root cause in your code and creates a structured Jira issue:
 
 ```
-> /rdmss-jira-git triage "Users report that refunds are not showing up
+> /devops-pilot triage "Users report that refunds are not showing up
   in their account after processing. Error in logs: PaymentRecord
   created without orderId reference."
 
@@ -209,17 +228,17 @@ The power command. Give it any bug report — error log, user complaint, stack t
    Root cause: orderService.ts:234 — orderId not passed to PaymentRecord
    Suggested fix: Add orderId: order.id to the create call
 
- Start working on it? /rdmss-jira-git work ERP-42
+ Start working on it? /devops-pilot work ERP-42
 ```
 
 ---
 
-### `/rdmss-jira-git create-issue`
+### `/devops-pilot create-issue`
 
 Turn natural language into a structured Jira issue:
 
 ```
-> /rdmss-jira-git create-issue "We need to add CSV export to the
+> /devops-pilot create-issue "We need to add CSV export to the
   reports page. Users should be able to export any report as CSV
   with one click. High priority."
 
@@ -237,12 +256,12 @@ Turn natural language into a structured Jira issue:
 
 ---
 
-### `/rdmss-jira-git create-epic`
+### `/devops-pilot create-epic`
 
 Build a complete backlog from a specification:
 
 ```
-> /rdmss-jira-git create-epic "Payment System Overhaul" "We need to
+> /devops-pilot create-epic "Payment System Overhaul" "We need to
   support multiple payment gateways, add refund automation, and
   implement subscription billing."
 
@@ -261,12 +280,12 @@ Build a complete backlog from a specification:
 
 ---
 
-### `/rdmss-jira-git create-from-notes`
+### `/devops-pilot create-from-notes`
 
 Extract issues from meeting notes, emails, or Slack threads:
 
 ```
-> /rdmss-jira-git create-from-notes "From today's standup:
+> /devops-pilot create-from-notes "From today's standup:
   - The login page is broken on Safari
   - We need dark mode before the demo next week
   - API docs are outdated, someone needs to update them
@@ -287,7 +306,7 @@ Extract issues from meeting notes, emails, or Slack threads:
 
 ---
 
-### `/rdmss-jira-git sync`
+### `/devops-pilot sync`
 
 Downloads all issues from Jira and creates local markdown files with YAML frontmatter.
 
@@ -325,7 +344,7 @@ files_changed: []
 
 ---
 
-### `/rdmss-jira-git status`
+### `/devops-pilot status`
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -357,7 +376,7 @@ files_changed: []
 
 ---
 
-### `/rdmss-jira-git plan`
+### `/devops-pilot plan`
 
 Generates a phased execution plan. Bugs always come first.
 
@@ -385,7 +404,7 @@ Order: Bugs Highest → High → Features Highest → High → Medium
 
 ---
 
-### `/rdmss-jira-git work ERP-42`
+### `/devops-pilot work ERP-42`
 
 The main command. One invocation does everything:
 
@@ -410,7 +429,7 @@ The main command. One invocation does everything:
 
 ---
 
-### `/rdmss-jira-git done ERP-42`
+### `/devops-pilot done ERP-42`
 
 Closes the loop:
 
@@ -428,7 +447,7 @@ Closes the loop:
  Epic ERP-2 (Payments): 7/8 children done.
  1 remaining: ERP-38
 
- Create PR? Use: /rdmss-jira-git pr ERP-42
+ Create PR? Use: /devops-pilot pr ERP-42
 ```
 
 The Jira comment is auto-generated:
@@ -448,7 +467,7 @@ The Jira comment is auto-generated:
 
 ---
 
-### `/rdmss-jira-git pr ERP-42`
+### `/devops-pilot pr ERP-42`
 
 Creates a GitHub PR with Jira integration:
 
@@ -461,7 +480,7 @@ Creates a GitHub PR with Jira integration:
 
 ---
 
-### `/rdmss-jira-git verify ERP-42`
+### `/devops-pilot verify ERP-42`
 
 Runs your configured build/test command before marking done:
 
@@ -472,12 +491,12 @@ Runs your configured build/test command before marking done:
  Running: npm test
  ✓ 142 tests passed
 
- ERP-42 verified. Ready to close with /rdmss-jira-git done ERP-42
+ ERP-42 verified. Ready to close with /devops-pilot done ERP-42
 ```
 
 ---
 
-### `/rdmss-jira-git comment ERP-42`
+### `/devops-pilot comment ERP-42`
 
 Add a progress note to Jira without closing:
 
@@ -585,34 +604,34 @@ Frontend already had the correct role check.
 ### Day 1: Setup
 
 ```bash
-/rdmss-jira-git              # Auto-discovers everything, syncs issues
-/rdmss-jira-git plan         # See phased execution plan
+/devops-pilot              # Auto-discovers everything, syncs issues
+/devops-pilot plan         # See phased execution plan
 ```
 
 ### Daily Work
 
 ```bash
-/rdmss-jira-git status              # What's pending?
-/rdmss-jira-git work ERP-42         # Start the highest priority item
+/devops-pilot status              # What's pending?
+/devops-pilot work ERP-42         # Start the highest priority item
 # ... implementation happens ...
-/rdmss-jira-git verify ERP-42       # Run build & tests
-/rdmss-jira-git done ERP-42         # Close it everywhere
-/rdmss-jira-git pr ERP-42           # Open a PR
+/devops-pilot verify ERP-42       # Run build & tests
+/devops-pilot done ERP-42         # Close it everywhere
+/devops-pilot pr ERP-42           # Open a PR
 ```
 
 ### Weekly
 
 ```bash
-/rdmss-jira-git sync                # Pull latest from Jira
-/rdmss-jira-git close-epics         # Close completed epics
-/rdmss-jira-git status              # Progress report
+/devops-pilot sync                # Pull latest from Jira
+/devops-pilot close-epics         # Close completed epics
+/devops-pilot status              # Progress report
 ```
 
 ### Bulk Operations
 
 ```bash
 # Close multiple already-implemented features
-/rdmss-jira-git batch-done ERP-10 ERP-11 ERP-12 ERP-14
+/devops-pilot batch-done ERP-10 ERP-11 ERP-12 ERP-14
 ```
 
 ---
