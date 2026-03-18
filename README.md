@@ -186,12 +186,25 @@ If something is missing, the wizard tells you exactly what to do:
 | `/devops-pilot work {KEY}` | Assign + branch + analyze codebase + implement |
 | `/devops-pilot done {KEY}` | Commit + push + Jira comment + close issue |
 | `/devops-pilot pr {KEY}` | Create GitHub PR with Jira link |
+| `/devops-pilot merge {KEY}` | Merge PR, delete branch, cleanup |
+| `/devops-pilot review {KEY}` | Review a PR with code analysis |
 | `/devops-pilot verify {KEY}` | Run build/tests before marking done |
 | `/devops-pilot comment {KEY}` | Add a Jira comment without closing |
 | `/devops-pilot reopen {KEY}` | Reopen a closed issue |
 | `/devops-pilot batch-done {K1 K2 ...}` | Close multiple already-implemented issues |
 
-**Manage** (track and organize)
+**Edit & Organize** (modify issues and manage backlog)
+
+| Command | What it does |
+|:--------|:-------------|
+| `/devops-pilot edit {KEY} [--field val]` | Edit summary, priority, description, labels, epic |
+| `/devops-pilot assign {KEY} {user}` | Assign issue to a different team member |
+| `/devops-pilot move {KEY} {status}` | Move issue to any workflow status |
+| `/devops-pilot link {KEY1} {rel} {KEY2}` | Link issues (blocks, relates-to, duplicates) |
+| `/devops-pilot label {KEY} {labels}` | Add or remove labels |
+| `/devops-pilot delete {KEY}` | Delete an issue (with confirmation) |
+
+**Manage** (track, plan, and organize)
 
 | Command | What it does |
 |:--------|:-------------|
@@ -199,6 +212,8 @@ If something is missing, the wizard tells you exactly what to do:
 | `/devops-pilot sync` | Pull issues from Jira to local markdown files |
 | `/devops-pilot status` | Dashboard with progress by epic and priority |
 | `/devops-pilot plan` | Execution plan by phases (bugs first, features later) |
+| `/devops-pilot sprint` | View current sprint, progress, and issues |
+| `/devops-pilot backlog` | View and sort the full backlog |
 | `/devops-pilot close-epics` | Auto-close epics with 100% children done |
 | `/devops-pilot branch {name}` | Create branch (Git-only) |
 | `/devops-pilot commit` | Smart commit with conventional messages |

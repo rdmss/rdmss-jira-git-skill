@@ -231,6 +231,110 @@ Phased execution: Bugs Critical → Minor → Features Core → Complementary. B
 ### `/devops-pilot close-epics`
 Find epics with 100% children done, close with summary comment.
 
+### `/devops-pilot edit {KEY} [--field value]`
+**Requires:** Jira enabled
+
+Edit an existing Jira issue. Supports:
+- `edit {KEY} --summary "New title"` — change summary
+- `edit {KEY} --priority High` — change priority
+- `edit {KEY} --description "New desc"` — replace description
+- `edit {KEY} --labels bug,urgent` — set labels
+- `edit {KEY} --epic {EPIC_KEY}` — move to different epic
+- `edit {KEY}` (no flags) — interactive: show current values, ask what to change
+
+Uses `editJiraIssue(cloudId, KEY, { fields })`. Updates local `.md` file frontmatter to match. Regenerate INDEX.
+
+### `/devops-pilot assign {KEY} {user}`
+**Requires:** Jira enabled
+
+Assign an issue to a different user:
+1. If `{user}` provided: `lookupJiraAccountId(cloudId, user)` to find by name or email.
+2. If not provided: show team members and ask.
+3. `editJiraIssue(cloudId, KEY, { assignee: { accountId } })`.
+4. Update local frontmatter `assignee` field.
+5. If `{user}` is "me": use config assignee.
+
+### `/devops-pilot move {KEY} {status}`
+**Requires:** Jira enabled
+
+Move an issue to any status (beyond just work/done):
+- `move {KEY} backlog` — send back to backlog
+- `move {KEY} in_progress` — same as work but without branch creation
+- `move {KEY} done` — same as done but without commit/comment
+- `move {KEY} {custom_status}` — use raw transition name
+
+Looks up transition ID from config or queries available transitions. Updates local frontmatter.
+
+### `/devops-pilot link {KEY1} {relation} {KEY2}`
+**Requires:** Jira enabled
+
+Create a link between two issues:
+- `link ERP-42 blocks ERP-50` — ERP-42 blocks ERP-50
+- `link ERP-42 relates-to ERP-38` — generic relation
+- `link ERP-42 duplicates ERP-15` — mark as duplicate
+
+Uses `createIssueLink(cloudId, { type, inwardIssue, outwardIssue })`. Available link types discovered via `getIssueLinkTypes`.
+
+### `/devops-pilot label {KEY} {label1} [label2] ...`
+**Requires:** Jira enabled
+
+Add or manage labels on an issue:
+- `label ERP-42 urgent` — add label
+- `label ERP-42 urgent critical` — add multiple labels
+- `label ERP-42 --remove urgent` — remove a label
+
+Uses `editJiraIssue` with labels field. Updates local frontmatter.
+
+### `/devops-pilot sprint {action}`
+**Requires:** Jira enabled
+
+Sprint management:
+- `sprint` (no args) — show current sprint: name, goal, dates, issues, progress
+- `sprint list` — list all sprints (active, future, closed)
+- `sprint move {KEY} {sprintId}` — move issue to a sprint
+- `sprint current` — detailed view of active sprint with burndown-style progress
+
+Queries sprint data via JQL: `sprint in openSprints()` and `sprint = {id}`.
+
+### `/devops-pilot backlog [--sort priority|type|epic]`
+**Requires:** Jira enabled
+
+View and manage the backlog:
+- `backlog` — show all pending issues sorted by priority
+- `backlog --sort type` — group by bug/feature/task
+- `backlog --sort epic` — group by epic
+- `backlog prioritize {KEY} --priority Highest` — change priority (shortcut for edit)
+
+### `/devops-pilot delete {KEY}`
+**Requires:** Jira enabled. **Requires user confirmation.**
+
+Delete an issue from Jira and remove local tracking file:
+1. Show issue details and ask: "Are you sure? This cannot be undone."
+2. If confirmed: delete from Jira (if supported) or transition to Cancelled.
+3. Remove `.claude/tracker/issues/{KEY}.md`.
+4. Regenerate INDEX.
+
+### `/devops-pilot merge {KEY}`
+**Requires:** Git + GitHub authenticated.
+
+Merge a PR for a completed issue:
+1. Find PR from frontmatter `pr_url` or search by branch.
+2. Check PR status: reviews, checks, conflicts.
+3. If all green: `gh pr merge {number} --squash` (or --merge, ask user preference).
+4. Delete remote branch after merge.
+5. Checkout default branch and pull.
+6. Report: "PR #{n} merged. Branch cleaned up."
+
+### `/devops-pilot review {KEY or PR_URL}`
+**Requires:** Git + GitHub authenticated.
+
+Review a PR:
+1. Fetch PR details: `gh pr view {number}`.
+2. Show: title, description, files changed, diff stats.
+3. Read the diff and provide code review comments.
+4. If issues found: add review comments via `gh pr review`.
+5. If approved: `gh pr review --approve`.
+
 ---
 
 ## 5. Issue File Format

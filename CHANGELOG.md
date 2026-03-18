@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-03-18
+
+### Added
+- `edit` command: modify summary, priority, description, labels, epic of any issue
+- `assign` command: assign issues to any team member (lookup by name/email)
+- `move` command: transition issues to any workflow status
+- `link` command: create issue links (blocks, relates-to, duplicates)
+- `label` command: add/remove labels on issues
+- `delete` command: delete issues with confirmation
+- `sprint` command: view current sprint, list sprints, move issues between sprints
+- `backlog` command: view and sort the full backlog
+- `merge` command: merge GitHub PRs with squash/merge option, branch cleanup
+- `review` command: review PRs with code analysis and inline comments
+- Commands organized in 4 categories: Create, Execute, Edit & Organize, Manage
+- Total: 27 commands covering the complete dev lifecycle
+
 ## [3.0.0] - 2026-03-18
 
 ### Added
